@@ -1,0 +1,18 @@
+{
+  "name": "swkweb/sort-nested-order-line-items",
+  "description": "Sort nested line items and assign position for flat",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Swkweb\\SortNestedOrderLineItems\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "Swkweb\\SortNestedOrderLineItems\\SwkwebSortNestedOrderLineItems",
+    "label": {
+      "de-DE": "Sortiere verschachtelte Line Items",
+      "en-GB": "Sort nested line items"
+    }
+  }
+}

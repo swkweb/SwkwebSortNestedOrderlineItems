@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Core\Framework\Api -->
+        <!-- Core\Framework\Api\Service -->
+        <service id="Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Service\OrderLineItemSortService"/>
+
+        <!-- Core\Framework\Api\Response -->
+        <service id="Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Response\ResponseFactoryInterfaceValueResolver"
+                 decorates="Shopware\Core\Framework\Api\Response\ResponseFactoryInterfaceValueResolver"
+                 decoration-priority="-1">
+            <argument type="service" id="Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Response\ResponseFactoryInterfaceValueResolver.inner"/>
+            <argument type="service" id="Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Service\OrderLineItemSortService"/>
+        </service>
+    </services>
+</container>
