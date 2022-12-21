@@ -1,8 +1,19 @@
 {
   "name": "swkweb/sort-nested-order-line-items",
   "description": "Sort nested line items and assign position for flat",
+  "version": "0.0.1",
   "type": "shopware-platform-plugin",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "SWK Web",
+      "email": "info@swk-web.com",
+      "homepage": "https://www.swk-web.com"
+    }
+  ],
+  "require": {
+    "shopware/core": "~6.4.0"
+  },
   "autoload": {
     "psr-4": {
       "Swkweb\\SortNestedOrderLineItems\\": "src/"
