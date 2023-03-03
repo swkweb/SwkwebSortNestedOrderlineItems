@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Order conversion</title>
+        <title lang="de-DE">Bestellungsumwandlung</title>
+
+        <input-field type="bool">
+            <name>shouldAssignPositionFlat</name>
+            <label>Lineitem positions</label>
+            <label lang="de-DE">Line Item Positionen Anpassen</label>
+            <defaultValue>false</defaultValue>
+        </input-field>
+    </card>
+</config>
