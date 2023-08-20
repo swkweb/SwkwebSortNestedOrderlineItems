@@ -1,0 +1,40 @@
+on: [push, pull_request]
+name: Main
+jobs:
+    php-cs-fixer:
+        name: PHP-CS-Fixer
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: PHP-CS-Fixer
+          uses: docker://oskarstark/php-cs-fixer-ga
+          with:
+            args: --diff --dry-run
+
+    phpstan:
+        name: phpstan
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: phpstan
+          uses: docker://aragon999/phpstan-shopware:v6.4.0
+          with:
+            args: analyse .
+
+    package:
+        name: package
+        needs: [php-cs-fixer, phpstan]
+        runs-on: ubuntu-latest
+        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.4.20
+        steps:
+        - uses: actions/checkout@v3
+
+        - name: build
+          run: |
+            ln -s "$(pwd)" "/plugins/SwkwebSortNestedOrderlineItems"
+            pack-plugin "SwkwebSortNestedOrderlineItems"
+
+        - uses: actions/upload-artifact@v3
+          with:
+            name: SwkwebSortNestedOrderlineItems
+            path: SwkwebSortNestedOrderlineItems.zip
