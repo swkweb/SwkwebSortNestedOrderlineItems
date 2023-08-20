@@ -31,10 +31,10 @@ jobs:
 
         - name: build
           run: |
-            ln -s "$(pwd)" "/plugins/SwkwebSortNestedOrderlineItems"
-            pack-plugin "SwkwebSortNestedOrderlineItems"
+            ln -s "$(pwd)" "/plugins/SwkwebSortNestedOrderLineItems"
+            pack-plugin "SwkwebSortNestedOrderLineItems"
 
         - uses: actions/upload-artifact@v3
           with:
-            name: SwkwebSortNestedOrderlineItems
-            path: SwkwebSortNestedOrderlineItems.zip
+            name: SwkwebSortNestedOrderLineItems
+            path: SwkwebSortNestedOrderLineItems.zip
