@@ -5,28 +5,18 @@ namespace Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Response;
 use Shopware\Core\Framework\Api\Response\ResponseFactoryInterface;
 use Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Service\OrderLineItemSortService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class ResponseFactoryInterfaceValueResolver implements ArgumentValueResolverInterface
+class ResponseFactoryInterfaceValueResolver implements ValueResolverInterface
 {
-    private ArgumentValueResolverInterface $resolver;
-    private OrderLineItemSortService $orderLineItemSortService;
-
     /**
      * @internal
      */
     public function __construct(
-        ArgumentValueResolverInterface $coreResponseInterfaceResolver,
-        OrderLineItemSortService $orderLineItemSortService,
+        private readonly ValueResolverInterface $resolver,
+        private readonly OrderLineItemSortService $orderLineItemSortService,
     ) {
-        $this->resolver = $coreResponseInterfaceResolver;
-        $this->orderLineItemSortService = $orderLineItemSortService;
-    }
-
-    public function supports(Request $request, ArgumentMetadata $argument): bool
-    {
-        return $this->resolver->supports($request, $argument);
     }
 
     /**
@@ -40,23 +30,22 @@ class ResponseFactoryInterfaceValueResolver implements ArgumentValueResolverInte
             return $factories;
         }
 
-        return array_map([$this, 'decorateResponseFactory'], $factories);
+        return array_map(
+            fn (ResponseFactoryInterface $factory): ResponseFactoryInterface => $this->decorateResponseFactory($factory),
+            $factories,
+        );
     }
 
     private function isFilteredRequest(Request $request): bool
     {
-        if ($request->attributes->get('_route') !== 'api.order.search') {
-            return false;
-        }
-
-        return true;
+        return $request->attributes->get('_route') === 'api.order.search';
     }
 
     private function decorateResponseFactory(ResponseFactoryInterface $factory): ResponseFactoryInterface
     {
         return new SortNestedOrderLineItemsResponseFactory(
             $factory,
-            $this->orderLineItemSortService
+            $this->orderLineItemSortService,
         );
     }
 }

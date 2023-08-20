@@ -2,6 +2,7 @@
 
 namespace Swkweb\SortNestedOrderLineItems\Core\Framework\Api\Response;
 
+use Shopware\Core\Checkout\Order\OrderCollection;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Api\Context\ContextSource;
 use Shopware\Core\Framework\Api\Response\ResponseFactoryInterface;
@@ -16,15 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SortNestedOrderLineItemsResponseFactory implements ResponseFactoryInterface
 {
-    private ResponseFactoryInterface $factory;
-    private OrderLineItemSortService $orderLineItemSortService;
-
     public function __construct(
-        ResponseFactoryInterface $factory,
-        OrderLineItemSortService $orderLineItemSortService
+        private readonly ResponseFactoryInterface $factory,
+        private readonly OrderLineItemSortService $orderLineItemSortService,
     ) {
-        $this->factory = $factory;
-        $this->orderLineItemSortService = $orderLineItemSortService;
     }
 
     public function supports(string $contentType, ContextSource $origin): bool
@@ -38,7 +34,7 @@ class SortNestedOrderLineItemsResponseFactory implements ResponseFactoryInterfac
         EntityDefinition $definition,
         Request $request,
         Context $context,
-        bool $setLocationHeader = false
+        bool $setLocationHeader = false,
     ): Response {
         if ($entity instanceof OrderEntity) {
             $this->orderLineItemSortService->sort($entity);
@@ -52,12 +48,16 @@ class SortNestedOrderLineItemsResponseFactory implements ResponseFactoryInterfac
         EntitySearchResult $searchResult,
         EntityDefinition $definition,
         Request $request,
-        Context $context
+        Context $context,
     ): Response {
-        array_map(
-            [$this->orderLineItemSortService, 'sort'],
-            $searchResult->getEntities()->getElements()
-        );
+        if ($searchResult->getEntities() instanceof OrderCollection) {
+            array_map(
+                function (OrderEntity $order): void {
+                    $this->orderLineItemSortService->sort($order);
+                },
+                $searchResult->getEntities()->getElements(),
+            );
+        }
 
         return $this->factory->createListingResponse($criteria, $searchResult, $definition, $request, $context);
     }
@@ -66,7 +66,7 @@ class SortNestedOrderLineItemsResponseFactory implements ResponseFactoryInterfac
         EntityDefinition $definition,
         string $id,
         Request $request,
-        Context $context
+        Context $context,
     ): Response {
         return $this->factory->createRedirectResponse($definition, $id, $request, $context);
     }

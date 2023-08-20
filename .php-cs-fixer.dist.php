@@ -1,7 +1,7 @@
 <?php
 /*
  * This document has been generated with
- * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.0.0-rc.1|configurator
+ * https://mlocati.github.io/php-cs-fixer-configurator/#version:3.14|configurator
  * you can change this configuration by importing this file.
  */
 return (new PhpCsFixer\Config())
@@ -9,8 +9,8 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
         '@PSR12:risky' => true,
-        '@PHP74Migration' => true,
-        '@PHP74Migration:risky' => true,
+        '@PHP80Migration:risky' => true,
+        '@PHP81Migration' => true,
         '@PhpCsFixer' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
@@ -46,6 +46,8 @@ return (new PhpCsFixer\Config())
         'use_arrow_functions' => false,
         // Write conditions in Yoda style (`true`), non-Yoda style (`['equal' => false, 'identical' => false, 'less_and_greater' => false]`) or ignore those conditions (`null`) based on configuration.
         'yoda_style' => false,
+        // Multi-line arrays, arguments list, parameters list and `match` expressions must have a trailing comma.
+        'trailing_comma_in_multiline' => ['elements' => ['arguments', 'arrays', 'match', 'parameters']],
     ])
     ->setFinder(PhpCsFixer\Finder::create()
         ->exclude('vendor')
